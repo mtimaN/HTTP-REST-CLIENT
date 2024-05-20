@@ -1,8 +1,8 @@
 CXX=g++
 CXXFLAGS=-std=c++17 -Wall -Werror
 
-client: client.c requests.c helpers.c buffer.c library_api.cpp
-	$(CXX) -o client client.c requests.c helpers.c buffer.c library_api.cpp $(CXXFLAGS)
+client: client.cpp requests.cpp helpers.cpp buffer.c library_api.cpp
+	$(CXX) -o client client.cpp requests.cpp helpers.cpp buffer.c library_api.cpp $(CXXFLAGS)
 
 run: client
 	./client

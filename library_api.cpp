@@ -29,11 +29,17 @@ using namespace std;
 
 void register_user() {
     string name, password;
-
+    cin.ignore();
     cout << "username=";
-    cin >> name;
+    getline(cin, name);
     cout << "password=";
-    cin >> password;
+    getline(cin, password);
+
+    if (name.find(' ') != string::npos || password.find(' ') != string::npos) {
+        cout << "Error: invalid name or password\n";
+        return;
+    }
+
     json json_payload = {
         {"username", name},
         {"password", password},
@@ -60,11 +66,17 @@ void register_user() {
 
 string login_user() {
     string name, password;
-
+    cin.ignore();
     cout << "username=";
-    cin >> name;
+    getline(cin, name);
     cout << "password=";
-    cin >> password;
+    getline(cin, password);
+
+    if (name.find(' ') != string::npos || password.find(' ') != string::npos) {
+        cout << "Error: invalid name or password\n";
+        return "";
+    }
+
     json json_payload = {
         {"username", name},
         {"password", password},
@@ -183,12 +195,13 @@ void add_book(string &session_cookie, string &jwt_token) {
     string message;
 
     string title, author, genre, publisher;
+    string page_count_string;
     int page_count;
 
     cin.ignore();
     cout << "title=";
     getline(cin, title);
-
+    
     cout << "author=";
     getline(cin, author);
 
@@ -197,13 +210,23 @@ void add_book(string &session_cookie, string &jwt_token) {
 
     cout << "publisher=";
     getline(cin, publisher);
-
     cout << "page_count=";
-    cin >> page_count;
+    getline(cin, page_count_string);
 
-    if (cin.fail()) {
+
+    if (title == "" || author == "" || genre == "" || publisher == "" ||
+            page_count_string == "") {
+        cout << "Error: Invalid book data\n";
+        return;
+    }
+
+    try {
+        page_count = std::stoi(page_count_string);
+    } catch (std::invalid_argument const& ex) {
         cout << "Error: invalid page count\n";
-        cin.clear();
+        return;
+    } catch (std::out_of_range const& ex) {
+        cout << "Error: invalid page count\n";
         return;
     }
 
