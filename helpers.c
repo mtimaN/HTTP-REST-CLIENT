@@ -9,6 +9,8 @@
 #include "helpers.h"
 #include "buffer.h"
 
+#include <string>
+
 #define HEADER_TERMINATOR "\r\n\r\n"
 #define HEADER_TERMINATOR_SIZE (sizeof(HEADER_TERMINATOR) - 1)
 #define CONTENT_LENGTH "Content-Length: "
@@ -20,10 +22,8 @@ void error(const char *msg)
     exit(0);
 }
 
-void compute_message(char *message, const char *line)
-{
-    strcat(message, line);
-    strcat(message, "\r\n");
+void compute_message(std::string &message, const std::string &line) {
+    message += line + "\r\n";
 }
 
 int open_connection(char *host_ip, int portno, int ip_type, int socket_type, int flag)

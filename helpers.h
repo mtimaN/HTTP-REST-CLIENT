@@ -1,6 +1,8 @@
 #ifndef _HELPERS_
 #define _HELPERS_
 
+#include <string>
+
 #define BUFLEN 4096
 #define LINELEN 1000
 
@@ -8,7 +10,7 @@
 void error(const char *msg);
 
 // adds a line to a string message
-void compute_message(char *message, const char *line);
+void compute_message(std::string &message, const std::string &line);
 
 // opens a connection with server host_ip on port portno, returns a socket
 int open_connection(char *host_ip, int portno, int ip_type, int socket_type, int flag);
