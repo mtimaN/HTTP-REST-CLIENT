@@ -27,4 +27,10 @@ char *receive_from_server(int sockfd);
 // extracts and returns a JSON from a server response
 char *basic_extract_json_response(char *str);
 
+// add line and delimiter to message
+inline void compute_message(std::string &message, const std::string &line) {
+    message += line + "\r\n";
+}
+
+
 #endif

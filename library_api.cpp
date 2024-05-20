@@ -13,11 +13,14 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
+using std::cin;
+using std::cout;
+using std::string;
+using std::vector;
 
 using json = nlohmann::json;
 
-#define HOST "34.246.184.49"
+#define HOST (char *)"34.246.184.49"
 #define PORT 8080
 
 #define JSON_APP "application/json"
@@ -169,7 +172,7 @@ void get_book(string &session_cookie, string &jwt_token) {
             cout << "Error: " << error << '\n';
         }
     } else {
-        payload_start = response.rfind('[');
+        payload_start = response.rfind('{');
         cout << response.substr(payload_start) << '\n';
     }
 }
@@ -181,23 +184,26 @@ void add_book(string &session_cookie, string &jwt_token) {
 
     string title, author, genre, publisher;
     int page_count;
+
+    cin.ignore();
     cout << "title=";
-    cin >> title;
+    getline(cin, title);
 
     cout << "author=";
-    cin >> author;
+    getline(cin, author);
 
     cout << "genre=";
-    cin >> genre;
+    getline(cin, genre);
 
     cout << "publisher=";
-    cin >> publisher;
+    getline(cin, publisher);
 
     cout << "page_count=";
     cin >> page_count;
 
     if (cin.fail()) {
         cout << "Error: invalid page count\n";
+        cin.clear();
         return;
     }
 
@@ -260,5 +266,22 @@ void delete_book(string &session_cookie, string &jwt_token) {
 }
 
 void logout_user(string &session_cookie) {
+    vector<string> cookies = {session_cookie};
+    string message = compute_get_request(HOST, "/api/v1/tema/auth/logout", "", cookies, "");
 
+    int sockfd = open_connection(HOST, PORT, AF_INET, SOCK_STREAM, 0);
+    send_to_server(sockfd, message.data());
+    string response(receive_from_server(sockfd));
+    close_connection(sockfd);
+
+    size_t payload_start = response.rfind("{\"error");
+    if (payload_start != string::npos) {
+        json json_response = json::parse(response.substr(payload_start));
+        if (json_response.contains("error")) {
+            string error = json_response["error"];
+            cout << "Error: " << error << '\n';
+        }
+    } else {
+        cout << "Successfully logged out\n";
+    }
 }
